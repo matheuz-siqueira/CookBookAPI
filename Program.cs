@@ -1,5 +1,6 @@
 using cookbook_api.Data;
 using cookbook_api.Repositories;
+using cookbook_api.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddDbContext<Context>(
   options =>

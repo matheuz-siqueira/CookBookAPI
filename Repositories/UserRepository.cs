@@ -14,11 +14,10 @@ public class UserRepository
         _context = context;
     }
 
-    public User CreateUser(User newUser)
+    public void CreateUser(User newUser)
     {
         _context.Users.Add(newUser);
         _context.SaveChanges();
-        return newUser;
     }
 
     public void RemoveUser(User user)
