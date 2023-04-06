@@ -10,8 +10,9 @@ namespace cookbook_api.Services;
 public class UserService
 {
     private readonly UserRepository _repository;
-
-    public UserService([FromServices] UserRepository repository)
+    public UserService(
+        [FromServices] UserRepository repository,
+        [FromServices] AuthenticationService authService)
     {
         _repository = repository;
     }  
@@ -27,8 +28,7 @@ public class UserService
         var user = newUser.Adapt<User>();
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         user.CreatedAt = DateTime.Now;
-
         _repository.CreateUser(user); 
-
     }
+    
 }

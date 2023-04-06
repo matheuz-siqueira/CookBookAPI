@@ -3,12 +3,17 @@ using cookbook_api.Repositories;
 using cookbook_api.Services;
 using Microsoft.EntityFrameworkCore;
 
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthenticationService>();
 
 builder.Services.AddDbContext<Context>(
   options =>
@@ -20,6 +25,22 @@ builder.Services.AddDbContext<Context>(
       ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("Conection"))
   )
 );
+
+//Settings for Authentication with JWT
+var JWTKey = Encoding.ASCII.GetBytes(builder.Configuration["JWTKey"]);
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(JWTKey),
+            ValidateIssuerSigningKey = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+        };
+    });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -36,6 +57,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
