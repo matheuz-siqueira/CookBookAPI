@@ -17,12 +17,12 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult PostUser([FromBody] CreateUserReq newUser)
+    public ActionResult<string> PostUser([FromBody] CreateUserReq newUser)
     {
         try
         {
-            _service.CreateUser(newUser); 
-            return Ok();
+            var tokenJWT = _service.CreateUser(newUser); 
+            return Ok(tokenJWT);
         }
         catch(ExistingEmailException e)
         {

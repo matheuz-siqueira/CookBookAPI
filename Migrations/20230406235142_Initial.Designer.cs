@@ -11,7 +11,7 @@ using cookbook_api.Data;
 namespace cookbook_api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230404212507_Initial")]
+    [Migration("20230406235142_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,13 +31,16 @@ namespace cookbook_api.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("varchar(60)");
 
                     b.HasKey("Id");
 
