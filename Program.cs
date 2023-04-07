@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddScoped<RecipeRepository>();
 
 builder.Services.AddDbContext<Context>(
   options =>
