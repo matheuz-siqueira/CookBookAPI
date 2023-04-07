@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using cookbook_api.Models.Enums;
 
 namespace cookbook_api.Models;
 
@@ -13,7 +14,7 @@ public class Recipe
     public string Title { get; set; }
     
     [Required]
-    public int Category { get; set; }
+    public TypeRecipeEnum Category { get; set; }
 
     [Required]
     [Column(TypeName = "text")]
