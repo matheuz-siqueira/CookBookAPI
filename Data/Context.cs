@@ -9,4 +9,6 @@ public class Context : DbContext
     {}
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Recipe> Recipe { get; set; }
+    public DbSet<Ingredients> Ingredients { get; set; } 
 }
