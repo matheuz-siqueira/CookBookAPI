@@ -26,8 +26,9 @@ public class RecipeService
     public RecipeResponse CreateRecipe(CreateRecipeReq newRecipe, ClaimsPrincipal logged)
     {
         var id = int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier)); 
-        newRecipe.CreatedAt = DateTime.Now; 
-        var recipe = newRecipe.Adapt<Recipe>();
+        var recipe = newRecipe.Adapt<Recipe>(); 
+        recipe.CreatedAt = DateTime.Now;
+        recipe.userId = id;
         _repository.CreateRecipe(recipe); 
         return recipe.Adapt<RecipeResponse>(); 
     }

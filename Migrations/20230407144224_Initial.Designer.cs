@@ -11,8 +11,8 @@ using cookbook_api.Data;
 namespace cookbook_api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230407022920_RecipeAndIngredients")]
-    partial class RecipeAndIngredients
+    [Migration("20230407144224_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,7 +63,12 @@ namespace cookbook_api.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
+                    b.Property<int>("userId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("userId");
 
                     b.ToTable("Recipe");
                 });
@@ -107,7 +112,23 @@ namespace cookbook_api.Migrations
 
             modelBuilder.Entity("cookbook_api.Models.Recipe", b =>
                 {
+                    b.HasOne("cookbook_api.Models.User", "User")
+                        .WithMany("Recipes")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("cookbook_api.Models.Recipe", b =>
+                {
                     b.Navigation("Ingredients");
+                });
+
+            modelBuilder.Entity("cookbook_api.Models.User", b =>
+                {
+                    b.Navigation("Recipes");
                 });
 #pragma warning restore 612, 618
         }
