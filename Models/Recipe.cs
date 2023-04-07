@@ -26,4 +26,10 @@ public class Recipe
     //navigation property
     public List<Ingredients> Ingredients { get; set; }
 
+    //navigation property 
+    public User User { get; set; }
+
+    //foreing key
+    public int userId { get; set; }
+
 }

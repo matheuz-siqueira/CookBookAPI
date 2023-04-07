@@ -56,7 +56,7 @@ public class UserService
 
     }
 
-    private User GetById(int id, bool tracking = true)
+    public User GetById(int id, bool tracking = true)
     {
         var user = _repository.GetById(id, tracking); 
         if(user is null)

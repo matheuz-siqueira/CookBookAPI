@@ -15,6 +15,7 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<RecipeRepository>();
+builder.Services.AddScoped<RecipeService>();
 
 builder.Services.AddDbContext<Context>(
   options =>

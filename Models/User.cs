@@ -22,5 +22,8 @@ public class User
     
     [Required]
     public DateTime CreatedAt { get; set; }
+
+    //navigation property 
+    public List<Recipe> Recipes { get; set; }
     
 }
