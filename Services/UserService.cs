@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using cookbook_api.Dtos.User;
 using cookbook_api.Exceptions;
 using cookbook_api.Models;
@@ -38,5 +39,30 @@ public class UserService
         
         var login = userLogin.Adapt<LoginReq>(); 
         return _authService.Login(login);  
+    }
+
+    public void UpdatePassword(UpdatePasswordReq updatePass, ClaimsPrincipal logged)
+    {
+        var id = int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier));
+        var user = GetById(id, true); 
+
+        if(!BCrypt.Net.BCrypt.Verify(updatePass.CurrentPassword, user.Password))
+        {
+            throw new IncorretPassword("Incorret password");
+        }        
+
+        user.Password = BCrypt.Net.BCrypt.HashPassword(updatePass.NewPassword); 
+        _repository.UpdatePassword(user); 
+
+    }
+
+    private User GetById(int id, bool tracking = true)
+    {
+        var user = _repository.GetById(id, tracking); 
+        if(user is null)
+        {
+            throw new UserException("User not found");
+        }
+        return user;
     }
 }

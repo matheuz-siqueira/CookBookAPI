@@ -1,6 +1,7 @@
 using cookbook_api.Dtos.User;
 using cookbook_api.Exceptions;
 using cookbook_api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cookbook_api.Controllers;
@@ -25,6 +26,21 @@ public class UserController : ControllerBase
             return Ok(tokenJWT);
         }
         catch(ExistingEmailException e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [Authorize]
+    [HttpPut]
+    public ActionResult PutUserUpdatePassword([FromBody] UpdatePasswordReq update)
+    {
+        try 
+        {
+            _service.UpdatePassword(update, User); 
+            return Ok();
+        }
+        catch(IncorretPassword e)
         {
             return BadRequest(e.Message);
         }
