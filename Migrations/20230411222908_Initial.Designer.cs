@@ -11,7 +11,7 @@ using cookbook_api.Data;
 namespace cookbook_api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230407144224_Initial")]
+    [Migration("20230411222908_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,12 +63,12 @@ namespace cookbook_api.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int>("userId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Recipe");
                 });
@@ -114,7 +114,7 @@ namespace cookbook_api.Migrations
                 {
                     b.HasOne("cookbook_api.Models.User", "User")
                         .WithMany("Recipes")
-                        .HasForeignKey("userId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

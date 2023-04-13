@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace cookbook_api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("recipes")]
 public class RecipeController : ControllerBase
@@ -15,8 +16,7 @@ public class RecipeController : ControllerBase
     {
         _service = service; 
     } 
-
-    [Authorize] 
+ 
     [HttpPost]
     public ActionResult<RecipeResponse> PostRecipe(
         [FromBody] CreateRecipeReq newRecipe)
@@ -24,4 +24,9 @@ public class RecipeController : ControllerBase
         return Ok(_service.CreateRecipe(newRecipe, User));
     }
 
+    [HttpGet]
+    public ActionResult<List<GetAllResponse>> GetRecipes([FromBody] GetRecipesReq recipes)
+    {
+       return Ok(_service.GetRecipes(recipes, User)); 
+    }
 }

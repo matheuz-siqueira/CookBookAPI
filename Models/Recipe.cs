@@ -30,6 +30,6 @@ public class Recipe
     public User User { get; set; }
 
     //foreing key
-    public int userId { get; set; }
+    public int UserId { get; set; }
 
 }

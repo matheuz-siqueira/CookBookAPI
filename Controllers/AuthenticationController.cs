@@ -28,5 +28,4 @@ public class AuthenticationController : ControllerBase
             return NotFound(e.Message);
         }
     }
-
 }
