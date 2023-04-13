@@ -40,10 +40,9 @@ public class RecipeService
     public List<GetAllResponse> GetRecipes(GetRecipesReq recipe, ClaimsPrincipal logged)
     {   
         var userId = int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier));
-
-        return (recipe.Category.HasValue) 
-            ? Filter((TypeRecipeEnum)recipe.Category, userId).Adapt<List<GetAllResponse>>()
-            : _repository.GetAll(userId).Adapt<List<GetAllResponse>>();     
+        var recipes = _repository.GetAll(userId);
+        recipes = Filter(recipe, recipes); 
+        return recipes.Adapt<List<GetAllResponse>>();     
     }
 
     private int UserId(ClaimsPrincipal logged)
@@ -51,9 +50,19 @@ public class RecipeService
         return int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier));
     }
 
-    private List<Recipe> Filter(TypeRecipeEnum category, int userId)
+    private List<Recipe> Filter(GetRecipesReq recipe, List<Recipe> recipes)
     {
-        return _repository.FilterByCategory(category, userId);
+        var filters = recipes; 
+        if(recipe.Category.HasValue)
+        {
+            filters = recipes.Where(r => r.Category == recipe.Category.Value).ToList();
+        }
+        if(!string.IsNullOrWhiteSpace(recipe.TitleOrIngredients))
+        {
+            filters = 
+            recipes.Where(r => r.Title.Contains(recipe.TitleOrIngredients) || r.Ingredients.Any(i => i.Products.Contains(recipe.TitleOrIngredients))).ToList(); 
+        }
+        return filters;
     }
 
 }
