@@ -28,11 +28,12 @@ public class RecipeRepository
         .Where(r => r.UserId == userId).ToList();
     }
 
-    public List<Recipe> FilterByCategory(TypeRecipeEnum category, int userId)
-    {   
-        return _context.Recipe.AsNoTracking()
-        .Include(r => r.Ingredients)
-        .Where(r => r.UserId == userId)
-        .Where(r => r.Category == category).ToList();
+    public Recipe GetById(int recipeId, int userId, bool tracking = false )
+    {
+        return tracking 
+            ? _context.Recipe.Where(r => r.UserId == userId)
+                .Include(r => r.Ingredients).FirstOrDefault(r => r.Id == recipeId)
+            : _context.Recipe.AsNoTracking().Where(r => r.UserId == userId)
+                .Include(r => r.Ingredients).FirstOrDefault(r => r.Id == recipeId); 
     }
 }

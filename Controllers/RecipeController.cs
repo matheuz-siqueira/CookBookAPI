@@ -1,4 +1,5 @@
 using cookbook_api.Dtos.Recipe;
+using cookbook_api.Exceptions;
 using cookbook_api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,27 @@ public class RecipeController : ControllerBase
     [HttpGet]
     public ActionResult<List<GetAllResponse>> GetRecipes([FromBody] GetRecipesReq recipes)
     {
-       return Ok(_service.GetRecipes(recipes, User)); 
+       try 
+       {
+            return Ok(_service.GetRecipes(recipes, User));
+       }
+       catch(Exception)
+       {
+            return NoContent();
+       }
     }
+
+    [HttpGet("{id:int}")]
+    public ActionResult<RecipeResponse> GetRecipe([FromRoute] int id)
+    {
+        try 
+        {
+            return Ok(_service.GetById(id, User));
+        }
+        catch(RecipeNotFound e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
 }

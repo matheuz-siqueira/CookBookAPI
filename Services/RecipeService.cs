@@ -39,10 +39,31 @@ public class RecipeService
 
     public List<GetAllResponse> GetRecipes(GetRecipesReq recipe, ClaimsPrincipal logged)
     {   
-        var userId = int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userId = UserId(logged); 
         var recipes = _repository.GetAll(userId);
         recipes = Filter(recipe, recipes); 
+
+        if(recipes is null)
+        {
+            throw new Exception();
+        }
         return recipes.Adapt<List<GetAllResponse>>();     
+    }
+
+    public RecipeResponse GetById(int id, ClaimsPrincipal logged)
+    {
+        return FindById(id, logged, false).Adapt<RecipeResponse>(); 
+    }
+
+    private Recipe FindById(int id, ClaimsPrincipal logged, bool tracking = true)
+    {
+        var userId = UserId(logged); 
+        var response =  _repository.GetById(id, userId,false);
+        if(response is null)
+        {
+            throw new RecipeNotFound("Recipe not found");
+        }
+        return response;  
     }
 
     private int UserId(ClaimsPrincipal logged)
