@@ -99,7 +99,7 @@ public class RecipeService
             .Where(r => r.Title.CompareNoCase(recipe.TitleOrIngredients) || r.Ingredients.Any(i => i.Products.CompareNoCase(recipe.TitleOrIngredients)))
             .ToList(); 
         }
-        return filters;
+        return filters.OrderBy(r => r.Title).ToList();
     }
 
 }
