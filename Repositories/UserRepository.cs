@@ -37,4 +37,9 @@ public class UserRepository
         return _context.Users.AsNoTracking().FirstOrDefault(user => user.Email.Equals(email)); 
     }
 
+    public User GetProfile(int id)
+    {
+        return _context.Users.AsNoTracking().FirstOrDefault(u => u.Id == id);
+    }
+
 }

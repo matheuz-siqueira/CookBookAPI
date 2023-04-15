@@ -41,6 +41,13 @@ public class UserService
         return _authService.Login(login);  
     }
 
+    public GetProfileResponse GetProfile(ClaimsPrincipal logged)
+    {
+        var userId = UserId(logged); 
+        var response = _repository.GetProfile(userId);
+        return response.Adapt<GetProfileResponse>(); 
+    }
+
     public void UpdatePassword(UpdatePasswordReq updatePass, ClaimsPrincipal logged)
     {
         var id = int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -64,5 +71,11 @@ public class UserService
             throw new UserException("User not found");
         }
         return user;
+    }
+
+    private int UserId(ClaimsPrincipal logged)
+    {
+        var id = int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier));
+        return id; 
     }
 }

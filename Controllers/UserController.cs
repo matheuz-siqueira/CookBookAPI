@@ -32,6 +32,13 @@ public class UserController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet] 
+    public ActionResult<GetProfileResponse> GetUser()
+    {
+        return Ok(_service.GetProfile(User));
+    }   
+
+    [Authorize]
     [HttpPut]
     public ActionResult PutUserUpdatePassword([FromBody] UpdatePasswordReq update)
     {
