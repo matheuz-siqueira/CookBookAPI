@@ -63,6 +63,12 @@ public class RecipeService
         return recipe.Adapt<RecipeResponse>(); 
     }
 
+    public void Revove(int recipeId, ClaimsPrincipal logged)   
+    {
+        var recipe = FindById(recipeId, logged, true);
+        _repository.Remove(recipe);
+    }
+
     private Recipe FindById(int id, ClaimsPrincipal logged, bool tracking = true)
     {
         var userId = UserId(logged); 
@@ -73,7 +79,6 @@ public class RecipeService
         }
         return response;  
     }
-
     private int UserId(ClaimsPrincipal logged)
     {
         return int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier));

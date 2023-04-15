@@ -62,6 +62,20 @@ public class RecipeController : ControllerBase
         {
             return NotFound(e.Message);
         }
-    } 
+    }
+
+    [HttpDelete("{id:int}")]
+    public ActionResult DeleteRecipe([FromRoute] int id)  
+    {
+        try
+        {
+            _service.Revove(id, User); 
+            return NoContent();
+        }
+        catch(RecipeNotFound e)
+        {
+            return NotFound(e.Message);
+        }
+    }
 
 }
