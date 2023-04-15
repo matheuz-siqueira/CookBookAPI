@@ -10,5 +10,5 @@ public class RecipeResponse
     public string Preparation { get; set; }
     public List<Ingredients> Ingredients { get; set; }
     public int PreparationTime { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime UpdateAt { get; set; }
 }

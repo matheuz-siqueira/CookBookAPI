@@ -39,7 +39,10 @@ public class RecipeService
         } 
         
         var recipe = newRecipe.Adapt<Recipe>();
-        recipe.CreatedAt = DateTime.Now;
+        var now = DateTime.Now;
+
+        recipe.CreatedAt = now;
+        recipe.UpdateAt = now; 
         recipe.UserId = id;
         _repository.CreateRecipe(recipe); 
         return recipe.Adapt<RecipeResponse>(); 
@@ -65,7 +68,8 @@ public class RecipeService
 
     public RecipeResponse Update(CreateUpdateRecipeReq edited, int recipeId, ClaimsPrincipal logged) 
     {
-        var recipe = FindById(recipeId, logged, true); 
+        var recipe = FindById(recipeId, logged, true);
+        recipe.UpdateAt = DateTime.Now; 
         edited.Adapt(recipe); 
         _repository.Update();
         return recipe.Adapt<RecipeResponse>(); 

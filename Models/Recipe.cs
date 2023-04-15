@@ -26,6 +26,8 @@ public class Recipe
     [Required]
     public DateTime CreatedAt { get; set; }
 
+    public DateTime UpdateAt { get; set; }
+
     //navigation property
     public List<Ingredients> Ingredients { get; set; }
 
