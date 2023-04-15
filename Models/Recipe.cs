@@ -19,7 +19,10 @@ public class Recipe
     [Required]
     [Column(TypeName = "text")]
     public string Preparation { get; set; }
-    
+
+    [Required]
+    public int PreparationTime { get; set; }
+
     [Required]
     public DateTime CreatedAt { get; set; }
 

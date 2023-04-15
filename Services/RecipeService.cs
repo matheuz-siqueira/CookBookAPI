@@ -31,8 +31,14 @@ public class RecipeService
 
     public RecipeResponse CreateRecipe(CreateUpdateRecipeReq newRecipe, ClaimsPrincipal logged)
     {
-        var id = int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier)); 
-        var recipe = newRecipe.Adapt<Recipe>(); 
+        var id = UserId(logged);
+
+        if(newRecipe.PreparationTime <= 0 || newRecipe.PreparationTime > 1000)
+        {
+            throw new Exception("Invalid preparation time");
+        } 
+        
+        var recipe = newRecipe.Adapt<Recipe>();
         recipe.CreatedAt = DateTime.Now;
         recipe.UserId = id;
         _repository.CreateRecipe(recipe); 

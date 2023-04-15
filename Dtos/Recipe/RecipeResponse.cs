@@ -9,5 +9,6 @@ public class RecipeResponse
     public TypeRecipeEnum Category { get; set; }
     public string Preparation { get; set; }
     public List<Ingredients> Ingredients { get; set; }
+    public int PreparationTime { get; set; }
     public DateTime CreatedAt { get; set; }
 }
