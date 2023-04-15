@@ -27,7 +27,7 @@ public class RecipeService
         _userRepository = userRepository;
     }
 
-    public RecipeResponse CreateRecipe(CreateRecipeReq newRecipe, ClaimsPrincipal logged)
+    public RecipeResponse CreateRecipe(CreateUpdateRecipeReq newRecipe, ClaimsPrincipal logged)
     {
         var id = int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier)); 
         var recipe = newRecipe.Adapt<Recipe>(); 
@@ -55,10 +55,18 @@ public class RecipeService
         return FindById(id, logged, false).Adapt<RecipeResponse>(); 
     }
 
+    public RecipeResponse Update(CreateUpdateRecipeReq edited, int recipeId, ClaimsPrincipal logged) 
+    {
+        var recipe = FindById(recipeId, logged, true); 
+        edited.Adapt(recipe); 
+        _repository.Update();
+        return recipe.Adapt<RecipeResponse>(); 
+    }
+
     private Recipe FindById(int id, ClaimsPrincipal logged, bool tracking = true)
     {
         var userId = UserId(logged); 
-        var response =  _repository.GetById(id, userId,false);
+        var response =  _repository.GetById(id, userId, tracking);
         if(response is null)
         {
             throw new RecipeNotFound("Recipe not found");

@@ -20,7 +20,7 @@ public class RecipeController : ControllerBase
  
     [HttpPost]
     public ActionResult<RecipeResponse> PostRecipe(
-        [FromBody] CreateRecipeReq newRecipe)
+        [FromBody] CreateUpdateRecipeReq newRecipe)
     {
         return Ok(_service.CreateRecipe(newRecipe, User));
     }
@@ -50,5 +50,18 @@ public class RecipeController : ControllerBase
             return NotFound(e.Message);
         }
     }
+
+    [HttpPut("{id:int}")]
+    public ActionResult<RecipeResponse> PutRecipe([FromRoute] int id, [FromBody] CreateUpdateRecipeReq edited)
+    {
+        try 
+        {
+            return Ok(_service.Update(edited, id, User));
+        }
+        catch(RecipeNotFound e)
+        {
+            return NotFound(e.Message);
+        }
+    } 
 
 }

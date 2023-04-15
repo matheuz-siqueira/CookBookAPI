@@ -2,7 +2,7 @@ using cookbook_api.Models.Enums;
 
 namespace cookbook_api.Dtos.Recipe;
 
-public class CreateRecipeReq
+public class CreateUpdateRecipeReq
 {   
     public string Title { get; set; }
     public TypeRecipeEnum Category { get; set; }

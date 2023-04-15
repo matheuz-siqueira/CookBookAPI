@@ -36,4 +36,9 @@ public class RecipeRepository
             : _context.Recipe.AsNoTracking().Where(r => r.UserId == userId)
                 .Include(r => r.Ingredients).FirstOrDefault(r => r.Id == recipeId); 
     }
+
+    public void Update()
+    {
+        _context.SaveChanges(); 
+    }
 }
