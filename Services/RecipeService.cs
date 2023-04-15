@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Claims;
 using cookbook_api.Dtos.Recipe;
 using cookbook_api.Exceptions;
+using cookbook_api.Extensions;
 using cookbook_api.Interfaces;
 using cookbook_api.Models;
 using cookbook_api.Models.Enums;
@@ -93,8 +95,9 @@ public class RecipeService
         }
         if(!string.IsNullOrWhiteSpace(recipe.TitleOrIngredients))
         {
-            filters = 
-            recipes.Where(r => r.Title.Contains(recipe.TitleOrIngredients) || r.Ingredients.Any(i => i.Products.Contains(recipe.TitleOrIngredients))).ToList(); 
+            filters = recipes
+            .Where(r => r.Title.CompareNoCase(recipe.TitleOrIngredients) || r.Ingredients.Any(i => i.Products.CompareNoCase(recipe.TitleOrIngredients)))
+            .ToList(); 
         }
         return filters;
     }
