@@ -9,6 +9,7 @@ namespace cookbook_api.Controllers;
 [Authorize]
 [ApiController]
 [Route("recipes")]
+[Produces("application/json")]
 public class RecipeController : ControllerBase
 {
     private readonly RecipeService _service;
@@ -18,14 +19,33 @@ public class RecipeController : ControllerBase
         _service = service; 
     } 
  
+    
+    /// <summary>
+    /// Cadastrar uma receita
+    /// </summary>
+    /// <remarks> 
+    /// {"title":"string","category":0,"preparation":"string","preparationTime":0,"ingredients":[{"products":"string","quantity":"string"}]}
+    /// </remarks> 
+    /// <param name="newRecipe">Dados da receita</param>
+    /// <returns>Objeto recém criado</returns>
+    /// <response code="200">Sucesso</response> 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<RecipeResponse> PostRecipe(
         [FromBody] CreateUpdateRecipeReq newRecipe)
     {
         return Ok(_service.CreateRecipe(newRecipe, User));
     }
 
+    /// <summary> 
+    /// Obter todas as receitas do usuário 
+    /// </summary>
+    /// <param name="recipes">Parâmetro de pesquisa</param> 
+    /// <returns>Coleção de receitas</returns> 
+    /// <response code="200">Sucesso</response>
+    /// <response code="204">Sucesso</response> 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<List<GetAllResponse>> GetRecipes([FromBody] GetRecipesReq recipes)
     {
        try 
@@ -38,7 +58,16 @@ public class RecipeController : ControllerBase
        }
     }
 
+    /// <summary> 
+    /// Obter receita por ID
+    /// </summary>
+    /// <param name="id">ID da receita</param>
+    /// <returns>Um evento</returns> 
+    /// <response code="200">Sucesso</response>
+    /// <response code="404">Não encontrado</response>
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<RecipeResponse> GetRecipe([FromRoute] int id)
     {
         try 
@@ -51,7 +80,22 @@ public class RecipeController : ControllerBase
         }
     }
 
+
+    /// <summary> 
+    /// Atualizar uma receita
+    /// </summary> 
+    /// <remarks>
+    /// {"title":"string","category":0,"preparation":"string","preparationTime":0,"ingredients":[{"products":"string","quantity":"string"}]}
+    /// </remarks>
+    /// <param name="id">ID da receita</param> 
+    /// <param name="edited">Dados da receita</param>
+    /// <returns>Receita atualizada</returns> 
+    /// <response code="200">Sucess</response>
+    /// <response code="404">Não encontrado</response> 
+
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<RecipeResponse> PutRecipe([FromRoute] int id, [FromBody] CreateUpdateRecipeReq edited)
     {
         try 
@@ -64,7 +108,17 @@ public class RecipeController : ControllerBase
         }
     }
 
+
+    /// <summary> 
+    /// Deletar uma receita
+    /// </summary>  
+    /// <param name="id">ID da receita</param>
+    /// <returns>Nada</returns> 
+    /// <response code="204">Sucesso</response>
+    /// <response code="404">Não encontrado</response> 
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult DeleteRecipe([FromRoute] int id)  
     {
         try

@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace cookbook_api.Controllers;
 
+
 [ApiController]
 [Route("[controller]")]
+[Produces("application/json")]
 public class AuthenticationController : ControllerBase
 {
     private readonly AuthenticationService _authService;
@@ -15,7 +17,19 @@ public class AuthenticationController : ControllerBase
         _authService = service;
     } 
 
+    /// <summary> 
+    /// Logar no sistema
+    /// </summary> 
+    /// <remarks> 
+    /// {"email":"validstring","password":"string"}
+    /// </remarks> 
+    /// <param name="login">Dados de login</param> 
+    /// <returns>Token de acesso</returns> 
+    /// <response code="200">Sucesso</response> 
+    /// <response code="400">Dados inválidos</response>  
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<string> Login([FromBody] LoginReq login)
     {
         try 

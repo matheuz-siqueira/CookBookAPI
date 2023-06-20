@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using cookbook_api.Interfaces;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +64,10 @@ builder.Services.AddSwaggerGen(c =>
                 Email = "matheussiqueira.work@gmail.com"
             }
         });
+    
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);  
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
