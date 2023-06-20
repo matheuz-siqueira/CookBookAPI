@@ -29,9 +29,11 @@ public class RecipeController : ControllerBase
     /// </remarks> 
     /// <param name="newRecipe">Dados da receita</param>
     /// <returns>Objeto recém criado</returns>
-    /// <response code="200">Sucesso</response> 
+    /// <response code="200">Sucesso</response>
+    /// <response code="401">Não autenticado</response>  
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<RecipeResponse> PostRecipe(
         [FromBody] CreateUpdateRecipeReq newRecipe)
     {
@@ -45,8 +47,10 @@ public class RecipeController : ControllerBase
     /// <returns>Coleção de receitas</returns> 
     /// <response code="200">Sucesso</response>
     /// <response code="204">Sucesso</response> 
+    /// <response code="401">Não autenticado</response>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<List<GetAllResponse>> GetRecipes([FromBody] GetRecipesReq recipes)
     {
        try 
@@ -66,9 +70,11 @@ public class RecipeController : ControllerBase
     /// <returns>Um evento</returns> 
     /// <response code="200">Sucesso</response>
     /// <response code="404">Não encontrado</response>
+    /// <response code="401">Não autenticado</response>
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<RecipeResponse> GetRecipe([FromRoute] int id)
     {
         try 
@@ -93,10 +99,11 @@ public class RecipeController : ControllerBase
     /// <returns>Receita atualizada</returns> 
     /// <response code="200">Sucess</response>
     /// <response code="404">Não encontrado</response> 
-
+    /// <response code="401">Não autenticado</response>
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<RecipeResponse> PutRecipe([FromRoute] int id, [FromBody] CreateUpdateRecipeReq edited)
     {
         try 
@@ -116,10 +123,12 @@ public class RecipeController : ControllerBase
     /// <param name="id">ID da receita</param>
     /// <returns>Nada</returns> 
     /// <response code="204">Sucesso</response>
-    /// <response code="404">Não encontrado</response> 
+    /// <response code="404">Não encontrado</response>
+    /// <response code="401">Não autenticado</response> 
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult DeleteRecipe([FromRoute] int id)  
     {
         try

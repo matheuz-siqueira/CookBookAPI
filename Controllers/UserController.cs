@@ -50,9 +50,11 @@ public class UserController : ControllerBase
     /// </summary> 
     /// <returns>Dados do usuário logado</returns>
     /// <response code="200">Sucesso</response> 
+    /// <response code="401">Não autenticado</response> 
     [Authorize]
     [HttpGet("getprofile")] 
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<GetProfileResponse> GetUser()
     {
         return Ok(_service.GetProfile(User));
@@ -67,11 +69,13 @@ public class UserController : ControllerBase
     /// <param name="update">Objeto para alterar senha</param>
     /// <returns>Nada</returns> 
     /// <response code="204">Sucesso</response> 
-    /// <response code="400">Dados incorretos</response> 
+    /// <response code="400">Dados incorretos</response>
+    /// <response code="401">Não autenticado</response>  
     [Authorize]
     [HttpPut("update-password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult PutUserUpdatePassword([FromBody] UpdatePasswordReq update)
     {
         try 
