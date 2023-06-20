@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace cookbook_api.Controllers;
 
+[ApiVersion("1")]
 [Authorize]
 [ApiController]
-[Route("recipes")]
+[Route("api/v{version:apiVersion}/recipes")]
 [Produces("application/json")]
 public class RecipeController : ControllerBase
 {

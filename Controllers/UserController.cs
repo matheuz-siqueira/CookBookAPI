@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace cookbook_api.Controllers;
 
+[ApiVersion("1")]
 [ApiController]
-[Route("users")]
+[Route("api/v{version:apiVersion}/users")]
 [Produces("application/json")]
 public class UserController : ControllerBase
 {
@@ -28,7 +29,7 @@ public class UserController : ControllerBase
     /// <returns>Token de autenticação</returns> 
     /// <response code="200">Sucesso</response>
     /// <response code="400">Email já cadastrado</response>  
-    [HttpPost]
+    [HttpPost("create-account")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<string> PostUser([FromBody] CreateUserReq newUser)
@@ -50,7 +51,7 @@ public class UserController : ControllerBase
     /// <returns>Dados do usuário logado</returns>
     /// <response code="200">Sucesso</response> 
     [Authorize]
-    [HttpGet] 
+    [HttpGet("getprofile")] 
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<GetProfileResponse> GetUser()
     {
@@ -68,7 +69,7 @@ public class UserController : ControllerBase
     /// <response code="204">Sucesso</response> 
     /// <response code="400">Dados incorretos</response> 
     [Authorize]
-    [HttpPut]
+    [HttpPut("update-password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult PutUserUpdatePassword([FromBody] UpdatePasswordReq update)
