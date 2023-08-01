@@ -15,7 +15,7 @@ public class AuthenticationController : ControllerBase
     public AuthenticationController([FromServices] AuthenticationService service)
     {
         _authService = service;
-    } 
+    }
 
     /// <summary> 
     /// Logar no sistema
@@ -27,17 +27,17 @@ public class AuthenticationController : ControllerBase
     /// <returns>Token de acesso</returns> 
     /// <response code="200">Sucesso</response> 
     /// <response code="400">Dados inválidos</response>  
-    [HttpPost]
+    [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<string> Login([FromBody] LoginReq login)
     {
-        try 
+        try
         {
             var tokenJWT = _authService.Login(login);
             return Ok(tokenJWT);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return NotFound(e.Message);
         }
