@@ -17,10 +17,10 @@ public class RecipeController : ControllerBase
 
     public RecipeController([FromServices] RecipeService service)
     {
-        _service = service; 
-    } 
- 
-    
+        _service = service;
+    }
+
+
     /// <summary>
     /// Cadastrar uma receita
     /// </summary>
@@ -31,7 +31,7 @@ public class RecipeController : ControllerBase
     /// <returns>Objeto recém criado</returns>
     /// <response code="200">Sucesso</response>
     /// <response code="401">Não autenticado</response>  
-    [HttpPost]
+    [HttpPost("register-recipe")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<RecipeResponse> PostRecipe(
@@ -48,19 +48,19 @@ public class RecipeController : ControllerBase
     /// <response code="200">Sucesso</response>
     /// <response code="204">Sucesso</response> 
     /// <response code="401">Não autenticado</response>
-    [HttpGet]
+    [HttpPost("get-all-recipes")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<List<GetAllResponse>> GetRecipes([FromBody] GetRecipesReq recipes)
     {
-       try 
-       {
+        try
+        {
             return Ok(_service.GetRecipes(recipes, User));
-       }
-       catch(Exception)
-       {
+        }
+        catch (Exception)
+        {
             return NoContent();
-       }
+        }
     }
 
     /// <summary> 
@@ -71,17 +71,17 @@ public class RecipeController : ControllerBase
     /// <response code="200">Sucesso</response>
     /// <response code="404">Não encontrado</response>
     /// <response code="401">Não autenticado</response>
-    [HttpGet("{id:int}")]
+    [HttpGet("get-by-id/{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<RecipeResponse> GetRecipe([FromRoute] int id)
     {
-        try 
+        try
         {
             return Ok(_service.GetById(id, User));
         }
-        catch(RecipeNotFound e)
+        catch (RecipeNotFound e)
         {
             return NotFound(e.Message);
         }
@@ -100,17 +100,17 @@ public class RecipeController : ControllerBase
     /// <response code="200">Sucess</response>
     /// <response code="404">Não encontrado</response> 
     /// <response code="401">Não autenticado</response>
-    [HttpPut("{id:int}")]
+    [HttpPut("update-recipe/{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<RecipeResponse> PutRecipe([FromRoute] int id, [FromBody] CreateUpdateRecipeReq edited)
     {
-        try 
+        try
         {
             return Ok(_service.Update(edited, id, User));
         }
-        catch(RecipeNotFound e)
+        catch (RecipeNotFound e)
         {
             return NotFound(e.Message);
         }
@@ -129,14 +129,14 @@ public class RecipeController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public ActionResult DeleteRecipe([FromRoute] int id)  
+    public ActionResult DeleteRecipe([FromRoute] int id)
     {
         try
         {
-            _service.Revove(id, User); 
+            _service.Revove(id, User);
             return NoContent();
         }
-        catch(RecipeNotFound e)
+        catch (RecipeNotFound e)
         {
             return NotFound(e.Message);
         }
