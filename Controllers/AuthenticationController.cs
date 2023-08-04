@@ -6,7 +6,7 @@ namespace cookbook_api.Controllers;
 
 [ApiVersion("1")]
 [ApiController]
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/v{version:apiVersion}/authentication")]
 [Produces("application/json")]
 public class AuthenticationController : ControllerBase
 {
@@ -30,7 +30,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<string> Login([FromBody] LoginReq login)
+    public ActionResult<TokenResponse> Login([FromBody] LoginReq login)
     {
         try
         {
