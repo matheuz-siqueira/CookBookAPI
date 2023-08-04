@@ -23,17 +23,20 @@ public class AuthenticationService
         _configuration = configuration;
     }
 
-    public string Login(LoginReq login)
+    public TokenResponse Login(LoginReq login)
     {
         var user = _userRepository.GetUserByEmail(login.Email);
-        if((user is null) || (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password)))
+        if ((user is null) || (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password)))
         {
             throw new Exception("incorrect username or password!");
         }
 
         var tokenJWT = GenerateJWT(user);
 
-        return tokenJWT;
+        return new TokenResponse
+        {
+            Token = tokenJWT,
+        };
     }
 
     private string GenerateJWT(User user)
@@ -46,17 +49,18 @@ public class AuthenticationService
                 new SymmetricSecurityKey(JWTKey),
                 SecurityAlgorithms.HmacSha256);
 
-        var claims = new List<Claim>();
-
-        claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-        claims.Add(new Claim(ClaimTypes.Name, user.Name));
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Name)
+        };
 
 
         //Criando o token
         var tokenJWT = new JwtSecurityToken(
             expires: DateTime.Now.AddHours(8),
             signingCredentials: credenciais,
-            claims : claims
+            claims: claims
         );
 
         //Escrevendo o token e retornando

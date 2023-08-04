@@ -20,21 +20,21 @@ public class UserRepository
         _context.SaveChanges();
     }
 
-    public void UpdatePassword(User user)
+    public void UpdatePassword()
     {
         _context.SaveChanges();
     }
 
     public User GetById(int id, bool tracking = true)
     {
-        return tracking 
-            ? _context.Users.FirstOrDefault(user => user.Id == id) 
-            : _context.Users.AsNoTracking().FirstOrDefault(user => user.Id == id); 
+        return tracking
+            ? _context.Users.FirstOrDefault(user => user.Id == id)
+            : _context.Users.AsNoTracking().FirstOrDefault(user => user.Id == id);
     }
-    
+
     public User GetUserByEmail(string email)
     {
-        return _context.Users.AsNoTracking().FirstOrDefault(user => user.Email.Equals(email)); 
+        return _context.Users.AsNoTracking().FirstOrDefault(user => user.Email.Equals(email));
     }
 
     public User GetProfile(int id)

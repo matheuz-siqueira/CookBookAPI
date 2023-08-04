@@ -125,7 +125,7 @@ public class RecipeController : ControllerBase
     /// <response code="204">Sucesso</response>
     /// <response code="404">Não encontrado</response>
     /// <response code="401">Não autenticado</response> 
-    [HttpDelete("{id:int}")]
+    [HttpDelete("remove/{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

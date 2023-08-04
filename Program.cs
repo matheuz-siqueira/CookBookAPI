@@ -49,14 +49,14 @@ builder.Services
         };
     });
 
-builder.Services.AddApiVersioning(options => 
+builder.Services.AddApiVersioning(options =>
 {
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.DefaultApiVersion = new ApiVersion(1, 0);
     options.ReportApiVersions = true;
 });
 
-builder.Services.AddVersionedApiExplorer(c => 
+builder.Services.AddVersionedApiExplorer(c =>
 {
     c.GroupNameFormat = "'v'VVV";
     c.SubstituteApiVersionInUrl = true;
@@ -66,28 +66,29 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => 
+builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", 
-        new OpenApiInfo {
-            Title = "CookbookAPI", 
+    c.SwaggerDoc("v1",
+        new OpenApiInfo
+        {
+            Title = "CookbookAPI",
             Version = "v1",
             Contact = new OpenApiContact
             {
-                Name = "Matheus Siqueira", 
+                Name = "Matheus Siqueira",
                 Email = "matheussiqueira.work@gmail.com"
             }
         });
-    
+
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);  
+    c.IncludeXmlComments(xmlPath);
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer", 
+        Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
         Description = "Header de autorização JWT usando o esquema Bearer.\r\n\r\nInforme o 'Bearer'[espaço] e o seu token.\r\n\r\nExemplo: \'Bearer asdlfajsdfasdf\'"
@@ -104,7 +105,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 }
             },
-            new string[]{}
+            Array.Empty<string>()
         }
     });
 });

@@ -32,14 +32,14 @@ public class UserController : ControllerBase
     [HttpPost("create-account")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<string> PostUser([FromBody] CreateUserReq newUser)
+    public ActionResult<TokenResponse> PostUser([FromBody] CreateUserReq newUser)
     {
         try
         {
-            var tokenJWT = _service.CreateUser(newUser); 
+            var tokenJWT = _service.CreateUser(newUser);
             return Ok(tokenJWT);
         }
-        catch(ExistingEmailException e)
+        catch (ExistingEmailException e)
         {
             return BadRequest(e.Message);
         }
@@ -52,13 +52,13 @@ public class UserController : ControllerBase
     /// <response code="200">Sucesso</response> 
     /// <response code="401">Não autenticado</response> 
     [Authorize]
-    [HttpGet("getprofile")] 
+    [HttpGet("getprofile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult<GetProfileResponse> GetUser()
     {
         return Ok(_service.GetProfile(User));
-    }   
+    }
 
     /// <summary> 
     /// Atualizar senha do usuário logado 
@@ -78,12 +78,12 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public ActionResult PutUserUpdatePassword([FromBody] UpdatePasswordReq update)
     {
-        try 
+        try
         {
-            _service.UpdatePassword(update, User); 
+            _service.UpdatePassword(update, User);
             return NoContent();
         }
-        catch(IncorretPassword e)
+        catch (IncorretPassword e)
         {
             return BadRequest(e.Message);
         }
