@@ -1,0 +1,505 @@
+{
+	"info": {
+		"_postman_id": "a412f2ae-ad5b-446f-96fb-9be6bbeb8067",
+		"name": "CookbookAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27540983"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "create-account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar registrar usuário com sucesso\", function(){",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json; ",
+									"",
+									"    pm.response.to.be.jsonBody(\"token\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let password = pm.variables.replaceIn('{{$randomPassword}}')",
+									"let email = pm.variables.replaceIn('{{$randomEmail}}')",
+									"",
+									"postman.setGlobalVariable(\"PASSWORD\", password); ",
+									"postman.setGlobalVariable(\"EMAIL\", email); ",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomFirstName}}\",\n    \"email\": \"{{EMAIL}}\",\n    \"password\": \"{{PASSWORD}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URLBASE}}/api/v1/users/create-account",
+							"host": [
+								"{{URLBASE}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"create-account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar fazer login com sucesso\", function(){",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.response.to.be.jsonBody(\"token\");",
+									"",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"TOKEN\", jsonData.token);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{EMAIL}}\",\n    \"password\": \"{{PASSWORD}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URLBASE}}/api/v1/authentication/login",
+							"host": [
+								"{{URLBASE}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authentication",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let newPassword = pm.variables.replaceIn('{{$randomPassword}}')",
+									"",
+									"postman.setGlobalVariable(\"NEWPASSWORD\", newPassword);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar atualizar senha com sucesso\", function(){",
+									"    pm.response.to.have.status(204);",
+									"",
+									"   var newPassword = postman.getGlobalVariable(\"NEWPASSWORD\");",
+									"   pm.environment.set(\"PASSWORD\", newPassword);",
+									"",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currentPassword\": \"{{PASSWORD}}\",\n    \"newPassword\": \"{{NEWPASSWORD}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URLBASE}}/api/v1/users/update-password",
+							"host": [
+								"{{URLBASE}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"update-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "recipe",
+			"item": [
+				{
+					"name": "register-recipe",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar registrar receita com sucesso\", function(){",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"",
+									"    pm.response.to.be.jsonBody(\"id\");",
+									"    pm.response.to.be.jsonBody(\"title\");",
+									"    pm.response.to.be.jsonBody(\"category\");",
+									"    pm.response.to.be.jsonBody(\"preparation\");",
+									"    pm.response.to.be.jsonBody(\"ingredients\");",
+									"    pm.response.to.be.jsonBody(\"preparationTime\");",
+									"",
+									"",
+									"    let jsonData = pm.response.json(); ",
+									"    pm.environment.set(\"IDRECIPE\", jsonData.id);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"{{$randomNoun}}\",\n  \"category\": 3,\n  \"preparation\": \"{{$randomLoremParagraph}}\",\n  \"preparationTime\": 25,\n  \"ingredients\": [\n    {\n      \"products\": \"{{$randomProduct}}\",\n      \"quantity\": \"{{$randomVerb}}\"\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URLBASE}}/api/v1/recipes/register-recipe",
+							"host": [
+								"{{URLBASE}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"recipes",
+								"register-recipe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-by-id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar recuperar receita por id\", function(){",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"",
+									"    pm.response.to.be.jsonBody(\"id\");",
+									"    pm.response.to.be.jsonBody(\"title\");",
+									"    pm.response.to.be.jsonBody(\"category\");",
+									"    pm.response.to.be.jsonBody(\"preparation\");",
+									"    pm.response.to.be.jsonBody(\"ingredients\");",
+									"    pm.response.to.be.jsonBody(\"preparationTime\");",
+									"    pm.response.to.be.jsonBody(\"updateAt\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URLBASE}}/api/v1/recipes/get-by-id/{{IDRECIPE}}",
+							"host": [
+								"{{URLBASE}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"recipes",
+								"get-by-id",
+								"{{IDRECIPE}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar recuperar receitas com sucesso\", function(){",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json; ",
+									"    ",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an(\"array\");",
+									"    pm.expect(jsonData[0]).to.have.keys(\"id\", \"title\", \"quantity\", \"preparationTime\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"titleOrIngredients\": \"\",\n  \"category\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URLBASE}}/api/v1/recipes/get-all-recipes",
+							"host": [
+								"{{URLBASE}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"recipes",
+								"get-all-recipes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar atualizar receita com sucesso\", function(){",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"",
+									"    pm.response.to.be.jsonBody(\"id\");",
+									"    pm.response.to.be.jsonBody(\"title\");",
+									"    pm.response.to.be.jsonBody(\"category\");",
+									"    pm.response.to.be.jsonBody(\"preparation\");",
+									"    pm.response.to.be.jsonBody(\"ingredients\");",
+									"    pm.response.to.be.jsonBody(\"preparationTime\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"{{$randomNoun}}\",\n  \"category\": 3,\n  \"preparation\": \"{{$randomLoremParagraph}}\",\n  \"preparationTime\": 25,\n  \"ingredients\": [\n    {\n      \"products\": \"{{$randomProduct}}\",\n      \"quantity\": \"{{$randomVerb}}\"\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URLBASE}}/api/v1/recipes/update-recipe/{{IDRECIPE}}",
+							"host": [
+								"{{URLBASE}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"recipes",
+								"update-recipe",
+								"{{IDRECIPE}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar deletar receita com sucesso\", function(){",
+									"    pm.response.to.have.status(204);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URLBASE}}/api/v1/recipes/remove/{{IDRECIPE}}",
+							"host": [
+								"{{URLBASE}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"recipes",
+								"remove",
+								"{{IDRECIPE}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URLBASE",
+			"value": "http://localhost:5085",
+			"type": "string"
+		}
+	]
+}
