@@ -26,5 +26,6 @@ public class User
     //navigation property 
     public List<Recipe> Recipes { get; set; }
     public Codes Code { get; set; }
+    public List<Connection> Connections { get; set; }
 
 }

@@ -11,6 +11,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using cookbook_api.WebSockets;
 using Microsoft.AspNetCore.Authorization;
+using HashidsNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,8 +24,15 @@ builder.Services.AddScoped<RecipeRepository>();
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<CodeRepository>();
 builder.Services.AddScoped<QRCodeService>();
+builder.Services.AddScoped<ConnectionRepository>();
 builder.Services.AddScoped<IAuthorizationHandler, LoggedHandler>();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<IHashids>(_ =>
+    new Hashids(builder.Configuration.GetValue<string>("HashIds:Salt"), 4)
+);
+
+
 
 builder.Services.AddAuthorization(option =>
 {
