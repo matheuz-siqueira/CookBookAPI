@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cookbook_api.Data;
 
@@ -10,9 +11,10 @@ using cookbook_api.Data;
 namespace cookbook_api.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230806165418_Connections")]
+    partial class Connections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,7 +158,7 @@ namespace cookbook_api.Migrations
             modelBuilder.Entity("cookbook_api.Models.Connection", b =>
                 {
                     b.HasOne("cookbook_api.Models.User", "User")
-                        .WithMany("Connections")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -194,8 +196,6 @@ namespace cookbook_api.Migrations
             modelBuilder.Entity("cookbook_api.Models.User", b =>
                 {
                     b.Navigation("Code");
-
-                    b.Navigation("Connections");
 
                     b.Navigation("Recipes");
                 });

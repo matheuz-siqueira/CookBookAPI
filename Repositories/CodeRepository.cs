@@ -11,6 +11,12 @@ public class CodeRepository
     {
         _context = context;
     }
+
+    public async Task<Codes> RetriveCodeAsync(string code)
+    {
+        return await _context.Codes.AsNoTracking().FirstOrDefaultAsync(c => c.Code == code);
+    }
+
     public async Task RegisterAsync(Codes code)
     {
         var codeDB = await _context.Codes.FirstOrDefaultAsync(c => c.UserId == code.UserId);

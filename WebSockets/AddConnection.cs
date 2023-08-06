@@ -1,3 +1,4 @@
+using cookbook_api.Dtos.User;
 using cookbook_api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -18,10 +19,26 @@ public class AddConnection : Hub
     }
     public async Task GetQRCode()
     {
-        var qrCode = await _qrCodeService.GenerateQRCode();
+        (var qrCode, var userId) = await _qrCodeService.GenerateQRCode();
 
-        _broadcaster.InitializeConnection(_hubContext, Context.ConnectionId);
+        _broadcaster.InitializeConnection(_hubContext, userId, Context.ConnectionId);
 
         await Clients.Caller.SendAsync("QRCodeResult", qrCode);
+    }
+
+    public async Task QRCodeRead(string codeConnection)
+    {
+        try
+        {
+            (var requester, var idCreator) = await _qrCodeService.QRCodeRead(codeConnection);
+
+            var connectionId = _broadcaster.GetConnectionIdCreator(idCreator);
+
+            await Clients.Client(connectionId).SendAsync("QRCodeReadResult", requester);
+        }
+        catch (Exception e)
+        {
+            await Clients.Caller.SendAsync("Erro", e.Message);
+        }
     }
 }

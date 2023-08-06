@@ -12,4 +12,5 @@ public class Context : DbContext
     public DbSet<Recipe> Recipe { get; set; }
     public DbSet<Ingredients> Ingredients { get; set; }
     public DbSet<Codes> Codes { get; set; }
+    public DbSet<Connection> Connections { get; set; }
 }
