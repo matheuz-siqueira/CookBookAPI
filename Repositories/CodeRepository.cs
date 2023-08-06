@@ -32,4 +32,15 @@ public class CodeRepository
         await _context.SaveChangesAsync();
 
     }
+
+    public async Task RemoveAsync(int userId)
+    {
+        var codes = await _context.Codes.Where(c => c.UserId == userId).ToListAsync();
+        if (codes.Any())
+        {
+            _context.Codes.RemoveRange(codes);
+            await _context.SaveChangesAsync();
+        }
+
+    }
 }

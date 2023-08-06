@@ -55,6 +55,13 @@ public class QRCodeService
 
     }
 
+    public async Task<string> RemoveQRCode()
+    {
+        var userId = int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await _codeRepository.RemoveAsync(userId);
+        return _hashids.Encode(userId);
+    }
+
     private async Task Validate(Codes code, User logged)
     {
         if (code is null)
@@ -71,7 +78,7 @@ public class QRCodeService
         {
             throw new Exception("");
         }
-
-
     }
+
+
 }
