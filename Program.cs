@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Models;
 using cookbook_api.Interfaces;
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using cookbook_api.WebSockets;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,13 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<RecipeRepository>();
 builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<IAuthorizationHandler, LoggedHandler>();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAuthorization(option =>
+{
+    option.AddPolicy("Logged", policy => policy.Requirements.Add(new LoggedRequirement()));
+});
 
 builder.Services.Register();
 
@@ -110,6 +119,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -126,5 +137,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<AddConnection>("/add-connection");
 
 app.Run();
