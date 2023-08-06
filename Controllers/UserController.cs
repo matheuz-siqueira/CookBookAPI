@@ -76,11 +76,11 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public ActionResult PutUserUpdatePassword([FromBody] UpdatePasswordReq update)
+    public async Task<ActionResult> PutUserUpdatePassword([FromBody] UpdatePasswordReq update)
     {
         try
         {
-            _service.UpdatePassword(update, User);
+            await _service.UpdatePassword(update, User);
             return NoContent();
         }
         catch (IncorretPassword e)

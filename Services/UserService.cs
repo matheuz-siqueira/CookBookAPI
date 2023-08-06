@@ -51,10 +51,10 @@ public class UserService
         return response.Adapt<GetProfileResponse>();
     }
 
-    public void UpdatePassword(UpdatePasswordReq updatePass, ClaimsPrincipal logged)
+    public async Task UpdatePassword(UpdatePasswordReq updatePass, ClaimsPrincipal logged)
     {
         var id = int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier));
-        var user = GetById(id, true);
+        var user = await _repository.GetById(id, true);
 
         if (!BCrypt.Net.BCrypt.Verify(updatePass.CurrentPassword, user.Password))
         {
@@ -66,9 +66,9 @@ public class UserService
 
     }
 
-    public User GetById(int id, bool tracking = true)
+    public async Task<User> GetById(int id, bool tracking = true)
     {
-        var user = _repository.GetById(id, tracking) ?? throw new UserException("User not found");
+        var user = await _repository.GetById(id, tracking) ?? throw new UserException("User not found");
         return user;
     }
 

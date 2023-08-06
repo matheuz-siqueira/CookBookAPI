@@ -29,7 +29,7 @@ public class LoggedHandler : AuthorizationHandler<LoggedRequirement>
             }
 
             var userId = int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var user = _userRepository.GetById(userId, false);
+            var user = await _userRepository.GetById(userId, false);
             if (user is null)
             {
                 context.Fail();

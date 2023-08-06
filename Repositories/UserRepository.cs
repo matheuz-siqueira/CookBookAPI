@@ -25,11 +25,11 @@ public class UserRepository
         _context.SaveChanges();
     }
 
-    public User GetById(int id, bool tracking = true)
+    public async Task<User> GetById(int id, bool tracking = true)
     {
         return tracking
-            ? _context.Users.FirstOrDefault(user => user.Id == id)
-            : _context.Users.AsNoTracking().FirstOrDefault(user => user.Id == id);
+            ? await _context.Users.FirstOrDefaultAsync(user => user.Id == id)
+            : await _context.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Id == id);
     }
 
     public User GetUserByEmail(string email)
