@@ -1,0 +1,29 @@
+using cookbook_api.Data;
+using cookbook_api.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace cookbook_api.Repositories;
+
+public class CodeRepository
+{
+    private readonly Context _context;
+    public CodeRepository(Context context)
+    {
+        _context = context;
+    }
+    public async Task RegisterAsync(Codes code)
+    {
+        var codeDB = await _context.Codes.FirstOrDefaultAsync(c => c.UserId == code.UserId);
+        if (codeDB is not null)
+        {
+            codeDB.Code = code.Code;
+            _context.Codes.Update(codeDB);
+        }
+        else
+        {
+            await _context.Codes.AddAsync(code);
+        }
+        await _context.SaveChangesAsync();
+
+    }
+}

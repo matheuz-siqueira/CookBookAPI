@@ -19,6 +19,26 @@ namespace cookbook_api.Migrations
                 .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("cookbook_api.Models.Codes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Codes");
+                });
+
             modelBuilder.Entity("cookbook_api.Models.Ingredients", b =>
                 {
                     b.Property<int>("Id")
@@ -103,6 +123,17 @@ namespace cookbook_api.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("cookbook_api.Models.Codes", b =>
+                {
+                    b.HasOne("cookbook_api.Models.User", "User")
+                        .WithOne("Code")
+                        .HasForeignKey("cookbook_api.Models.Codes", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("cookbook_api.Models.Ingredients", b =>
                 {
                     b.HasOne("cookbook_api.Models.Recipe", "Recipe")
@@ -132,6 +163,8 @@ namespace cookbook_api.Migrations
 
             modelBuilder.Entity("cookbook_api.Models.User", b =>
                 {
+                    b.Navigation("Code");
+
                     b.Navigation("Recipes");
                 });
 #pragma warning restore 612, 618
