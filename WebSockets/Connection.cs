@@ -10,6 +10,7 @@ public class Connection
     private readonly IHubContext<AddConnection> _hubContext;
     private readonly string Creator;
     private Action<string> _callbackExpired;
+    private string ConnectionIdUserReader;
 
     public Connection(IHubContext<AddConnection> hubContext, string creator)
     {
@@ -19,13 +20,13 @@ public class Connection
     public void StartTimeCount(Action<string> callbackExpired)
     {
         _callbackExpired = callbackExpired;
-        SecondTime = 60;
-        Timer = new System.Timers.Timer(1000)
-        {
-            Enabled = false
-        };
-        Timer.Elapsed += ElapsedTimerAsync;
-        Timer.Enabled = true;
+        StartTimer();
+    }
+
+    public void ResetTimer()
+    {
+        StopTime();
+        StartTimer();
     }
 
     public void StopTime()
@@ -33,6 +34,26 @@ public class Connection
         Timer?.Stop();
         Timer?.Dispose();
         Timer = null;
+    }
+
+    public void SetConnectionIdUserReader(string connectionId)
+    {
+        ConnectionIdUserReader = connectionId;
+    }
+    public string UserReaderQRCode()
+    {
+        return ConnectionIdUserReader;
+    }
+
+    private void StartTimer()
+    {
+        SecondTime = 60;
+        Timer = new System.Timers.Timer(1000)
+        {
+            Enabled = false
+        };
+        Timer.Elapsed += ElapsedTimerAsync;
+        Timer.Enabled = true;
     }
 
     private async void ElapsedTimerAsync(object sender, ElapsedEventArgs e)
