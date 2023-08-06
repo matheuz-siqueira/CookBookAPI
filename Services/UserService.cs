@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Security.Principal;
 using cookbook_api.Dtos.User;
 using cookbook_api.Exceptions;
 using cookbook_api.Models;
@@ -13,6 +14,7 @@ public class UserService
     private readonly UserRepository _repository;
 
     private readonly AuthenticationService _authService;
+
 
     public UserService(
         [FromServices] UserRepository repository,
