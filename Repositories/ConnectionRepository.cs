@@ -1,4 +1,5 @@
 using cookbook_api.Data;
+using cookbook_api.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace cookbook_api.Repositories;
@@ -17,5 +18,10 @@ public class ConnectionRepository
             c => c.UserId == idUserA && c.ConnectedWithUserId == idUserB);
     }
 
+    public async Task RegisterAsync(Connection connection)
+    {
+        await _context.Connections.AddAsync(connection);
+        await _context.SaveChangesAsync();
+    }
 
 }

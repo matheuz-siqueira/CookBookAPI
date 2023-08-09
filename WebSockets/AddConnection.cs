@@ -19,11 +19,19 @@ public class AddConnection : Hub
     }
     public async Task GetQRCode()
     {
-        (var qrCode, var userId) = await _qrCodeService.GenerateQRCode();
+        try
+        {
+            (var qrCode, var userId) = await _qrCodeService.GenerateQRCode();
 
-        _broadcaster.InitializeConnection(_hubContext, userId, Context.ConnectionId);
+            _broadcaster.InitializeConnection(_hubContext, userId, Context.ConnectionId);
 
-        await Clients.Caller.SendAsync("QRCodeResult", qrCode);
+            await Clients.Caller.SendAsync("QRCodeResult", qrCode);
+        }
+        catch (Exception e)
+        {
+            await Clients.Caller.SendAsync("Erro", e.Message);
+        }
+
     }
 
     public async Task QRCodeRead(string codeConnection)
@@ -45,9 +53,32 @@ public class AddConnection : Hub
 
     public async Task ConnectionRefused()
     {
-        var connectionIdCreator = Context.ConnectionId;
-        var userId = await _qrCodeService.RemoveQRCode();
-        var connectionIdUserReader = _broadcaster.Remove(connectionIdCreator, userId);
-        await Clients.Client(connectionIdUserReader).SendAsync("OnConnectionRefused");
+        try
+        {
+            var connectionIdCreator = Context.ConnectionId;
+            var userId = await _qrCodeService.ConnectionRefused();
+            var connectionIdUserReader = _broadcaster.Remove(connectionIdCreator, userId);
+            await Clients.Client(connectionIdUserReader).SendAsync("OnConnectionRefused");
+        }
+        catch (Exception e)
+        {
+            await Clients.Caller.SendAsync("Erro", e.Message);
+        }
+
+    }
+
+    public async Task ConnectionAccepted(string idUserToConnect)
+    {
+        try
+        {
+            var userId = await _qrCodeService.ConnectionAccepted(idUserToConnect);
+            var connectionIdCreator = Context.ConnectionId;
+            var connectionIdUserReader = _broadcaster.Remove(connectionIdCreator, userId);
+            await Clients.Client(connectionIdUserReader).SendAsync("OnConnectionAccepted");
+        }
+        catch (Exception e)
+        {
+            await Clients.Caller.SendAsync("Erro", e.Message);
+        }
     }
 }
