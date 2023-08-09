@@ -11,7 +11,7 @@ using cookbook_api.Data;
 namespace cookbook_api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230806013426_Initial")]
+    [Migration("20230809010203_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,25 @@ namespace cookbook_api.Migrations
                         .IsUnique();
 
                     b.ToTable("Codes");
+                });
+
+            modelBuilder.Entity("cookbook_api.Models.Connection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ConnectedWithUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Connections");
                 });
 
             modelBuilder.Entity("cookbook_api.Models.Ingredients", b =>
@@ -136,6 +155,17 @@ namespace cookbook_api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("cookbook_api.Models.Connection", b =>
+                {
+                    b.HasOne("cookbook_api.Models.User", "User")
+                        .WithMany("Connections")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("cookbook_api.Models.Ingredients", b =>
                 {
                     b.HasOne("cookbook_api.Models.Recipe", "Recipe")
@@ -166,6 +196,8 @@ namespace cookbook_api.Migrations
             modelBuilder.Entity("cookbook_api.Models.User", b =>
                 {
                     b.Navigation("Code");
+
+                    b.Navigation("Connections");
 
                     b.Navigation("Recipes");
                 });

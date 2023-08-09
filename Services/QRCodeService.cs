@@ -48,6 +48,7 @@ public class QRCodeService
 
         var requester = new UserConnectionResponse
         {
+            Id = _hashids.Encode(userId),
             Name = logged.Name
         };
 
@@ -55,7 +56,29 @@ public class QRCodeService
 
     }
 
-    public async Task<string> RemoveQRCode()
+    public async Task<string> ConnectionAccepted(string idUserToConnect)
+    {
+        var userId = int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        await _codeRepository.RemoveAsync(userId);
+
+        await _connectionRepository.RegisterAsync(new Connection
+        {
+            UserId = userId,
+            ConnectedWithUserId = _hashids.DecodeSingle(idUserToConnect)
+        });
+
+        await _connectionRepository.RegisterAsync(new Connection
+        {
+            UserId = _hashids.DecodeSingle(idUserToConnect),
+            ConnectedWithUserId = userId
+        });
+
+        return _hashids.Encode(userId);
+
+    }
+
+
+    public async Task<string> ConnectionRefused()
     {
         var userId = int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
         await _codeRepository.RemoveAsync(userId);
