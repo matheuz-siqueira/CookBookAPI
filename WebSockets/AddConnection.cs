@@ -1,4 +1,5 @@
 using cookbook_api.Dtos.User;
+using cookbook_api.Exceptions;
 using cookbook_api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -45,7 +46,11 @@ public class AddConnection : Hub
             _broadcaster.SetConnectionIdUserReader(idCreator, Context.ConnectionId);
             await Clients.Client(connectionId).SendAsync("QRCodeReadResult", requester);
         }
-        catch (Exception e)
+        catch (InvalidOperation e)
+        {
+            await Clients.Caller.SendAsync("Erro", e.Message);
+        }
+        catch (CodeNotFound e)
         {
             await Clients.Caller.SendAsync("Erro", e.Message);
         }
@@ -60,7 +65,11 @@ public class AddConnection : Hub
             var connectionIdUserReader = _broadcaster.Remove(connectionIdCreator, userId);
             await Clients.Client(connectionIdUserReader).SendAsync("OnConnectionRefused");
         }
-        catch (Exception e)
+        catch (InvalidOperation e)
+        {
+            await Clients.Caller.SendAsync("Erro", e.Message);
+        }
+        catch (CodeNotFound e)
         {
             await Clients.Caller.SendAsync("Erro", e.Message);
         }
@@ -76,7 +85,11 @@ public class AddConnection : Hub
             var connectionIdUserReader = _broadcaster.Remove(connectionIdCreator, userId);
             await Clients.Client(connectionIdUserReader).SendAsync("OnConnectionAccepted");
         }
-        catch (Exception e)
+        catch (InvalidOperation e)
+        {
+            await Clients.Caller.SendAsync("Erro", e.Message);
+        }
+        catch (CodeNotFound e)
         {
             await Clients.Caller.SendAsync("Erro", e.Message);
         }

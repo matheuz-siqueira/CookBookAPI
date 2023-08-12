@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using cookbook_api.Dtos.User;
+using cookbook_api.Exceptions;
 using cookbook_api.Models;
 using cookbook_api.Repositories;
 using HashidsNet;
@@ -89,17 +90,17 @@ public class QRCodeService
     {
         if (code is null)
         {
-            throw new Exception("");
+            throw new CodeNotFound("code not found");
         }
         if (code.UserId == logged.Id)
         {
-            throw new Exception("");
+            throw new InvalidOperation("invalid operation");
         }
 
         var existing = await _connectionRepository.ExistingConnection(code.UserId, logged.Id);
         if (existing)
         {
-            throw new Exception("");
+            throw new InvalidOperation("invalid operation");
         }
     }
 
