@@ -28,17 +28,23 @@ public class RecipeRepository
         .Where(r => r.UserId == userId).ToList();
     }
 
-    public Recipe GetById(int recipeId, int userId, bool tracking = false )
+    public Recipe GetById(int recipeId, int userId, bool tracking = false)
     {
-        return tracking 
+        return tracking
             ? _context.Recipe.Where(r => r.UserId == userId)
                 .Include(r => r.Ingredients).FirstOrDefault(r => r.Id == recipeId)
             : _context.Recipe.AsNoTracking().Where(r => r.UserId == userId)
-                .Include(r => r.Ingredients).FirstOrDefault(r => r.Id == recipeId); 
+                .Include(r => r.Ingredients).FirstOrDefault(r => r.Id == recipeId);
+    }
+
+    public async Task<int> RecipeCountAsync(int userId)
+    {
+        return await _context.Recipe.AsNoTracking()
+            .CountAsync(r => r.UserId == userId);
     }
     public void Update()
     {
-        _context.SaveChanges(); 
+        _context.SaveChanges();
     }
 
     public void Remove(Recipe recipe)

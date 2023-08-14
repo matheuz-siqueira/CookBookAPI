@@ -34,7 +34,8 @@ public class UserRepository
 
     public User GetUserByEmail(string email)
     {
-        return _context.Users.AsNoTracking().FirstOrDefault(user => user.Email.Equals(email));
+        return _context.Users.AsNoTracking()
+        .FirstOrDefault(user => user.Email.Equals(email));
     }
 
     public User GetProfile(int id)
