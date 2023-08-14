@@ -24,6 +24,7 @@ builder.Services.AddScoped<RecipeRepository>();
 builder.Services.AddScoped<RecipeService>();
 builder.Services.AddScoped<CodeRepository>();
 builder.Services.AddScoped<QRCodeService>();
+builder.Services.AddScoped<ConnectionsService>();
 builder.Services.AddScoped<ConnectionRepository>();
 builder.Services.AddScoped<IAuthorizationHandler, LoggedHandler>();
 builder.Services.AddHttpContextAccessor();

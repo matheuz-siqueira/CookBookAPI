@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using cookbook_api.Data;
 using cookbook_api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -23,5 +24,11 @@ public class ConnectionRepository
         await _context.Connections.AddAsync(connection);
         await _context.SaveChangesAsync();
     }
-
+    public async Task<List<int>> GetConnectionsAsync(int userId)
+    {
+        return await _context.Connections.AsNoTracking()
+        .Where(c => c.UserId == userId)
+        .Select(c => c.ConnectedWithUserId)
+        .ToListAsync();
+    }
 }

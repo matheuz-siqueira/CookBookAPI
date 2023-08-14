@@ -11,7 +11,7 @@ using cookbook_api.Data;
 namespace cookbook_api.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230809010203_Initial")]
+    [Migration("20230812230825_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
