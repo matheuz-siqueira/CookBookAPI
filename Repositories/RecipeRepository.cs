@@ -28,6 +28,13 @@ public class RecipeRepository
         .Where(r => r.UserId == userId).ToList();
     }
 
+    public async Task<List<Recipe>> GetAllUsers(List<int> userIds)
+    {
+        return await _context.Recipe.AsNoTracking()
+        .Include(r => r.Ingredients)
+        .Where(r => userIds.Contains(r.UserId)).ToListAsync();
+    }
+
     public Recipe GetById(int recipeId, int userId, bool tracking = false)
     {
         return tracking

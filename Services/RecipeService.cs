@@ -16,11 +16,14 @@ namespace cookbook_api.Services;
 public class RecipeService
 {
     private readonly RecipeRepository _repository;
+    private readonly ConnectionRepository _connectionRepository;
 
     public RecipeService(
-        [FromServices] RecipeRepository repository)
+        RecipeRepository repository,
+        ConnectionRepository connectionRepository)
     {
         _repository = repository;
+        _connectionRepository = connectionRepository;
     }
 
     public RecipeResponse CreateRecipe(CreateUpdateRecipeReq newRecipe, ClaimsPrincipal logged)
@@ -42,16 +45,15 @@ public class RecipeService
         return recipe.Adapt<RecipeResponse>();
     }
 
-    public List<GetAllResponse> GetRecipes(GetRecipesReq recipe, ClaimsPrincipal logged)
+    public async Task<List<GetAllResponse>> GetRecipes(GetRecipesReq recipe, ClaimsPrincipal logged)
     {
         var userId = UserId(logged);
         var recipes = _repository.GetAll(userId);
         recipes = Filter(recipe, recipes);
-
-        if (recipes is null)
-        {
-            throw new Exception();
-        }
+        var connections = await _connectionRepository.GetConnectionsAsync(userId);
+        var recipesConnections = await _repository.GetAllUsers(connections);
+        recipesConnections = Filter(recipe, recipesConnections);
+        recipes = recipes.Concat(recipesConnections).ToList();
         return recipes.Adapt<List<GetAllResponse>>();
     }
 
