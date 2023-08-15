@@ -51,16 +51,14 @@ public class RecipeController : ControllerBase
     [HttpPost("get-all-recipes")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public ActionResult<List<GetAllResponse>> GetRecipes([FromBody] GetRecipesReq recipes)
+    public async Task<ActionResult<List<GetAllResponse>>> GetRecipes([FromBody] GetRecipesReq recipes)
     {
-        try
+        var result = await _service.GetRecipes(recipes, User);
+        if (result is not null)
         {
-            return Ok(_service.GetRecipes(recipes, User));
+            return Ok(result);
         }
-        catch (Exception)
-        {
-            return NoContent();
-        }
+        return NoContent();
     }
 
     /// <summary> 
