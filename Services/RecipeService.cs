@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Security.Claims;
 using cookbook_api.Dtos.Recipe;
 using cookbook_api.Exceptions;
@@ -57,33 +58,38 @@ public class RecipeService
         return recipes.Adapt<List<GetAllResponse>>();
     }
 
-    public RecipeResponse GetById(int id, ClaimsPrincipal logged)
+    public async Task<RecipeResponse> GetById(int id, ClaimsPrincipal logged)
     {
-        return FindById(id, logged, false).Adapt<RecipeResponse>();
+        var recipe = await _repository.GetById(id);
+        var userId = UserId(logged);
+        var connections = await _connectionRepository.GetConnectionsAsync(userId);
+
+        if (recipe is null ||
+            (recipe.UserId != userId && !connections.Contains(recipe.UserId)))
+        {
+            throw new RecipeNotFound("Recipe not found");
+        }
+        var response = recipe;
+        return response.Adapt<RecipeResponse>();
     }
 
-    public RecipeResponse Update(CreateUpdateRecipeReq edited, int recipeId, ClaimsPrincipal logged)
+    public async Task<RecipeResponse> Update(CreateUpdateRecipeReq edited, int recipeId, ClaimsPrincipal logged)
     {
-        var recipe = FindById(recipeId, logged, true);
+        var userId = UserId(logged);
+        var recipe = await _repository.GetByIdTracking(recipeId, userId);
         recipe.UpdateAt = DateTime.Now;
         edited.Adapt(recipe);
         _repository.Update();
         return recipe.Adapt<RecipeResponse>();
     }
 
-    public void Revove(int recipeId, ClaimsPrincipal logged)
+    public async Task Revove(int recipeId, ClaimsPrincipal logged)
     {
-        var recipe = FindById(recipeId, logged, true);
+        var userId = UserId(logged);
+        var recipe = await _repository.GetByIdTracking(recipeId, userId);
         _repository.Remove(recipe);
     }
 
-    private Recipe FindById(int id, ClaimsPrincipal logged, bool tracking = true)
-    {
-        var userId = UserId(logged);
-        var response = _repository.GetById(id, userId, tracking)
-            ?? throw new RecipeNotFound("Recipe not found");
-        return response;
-    }
     private static int UserId(ClaimsPrincipal logged)
     {
         return int.Parse(logged.FindFirstValue(ClaimTypes.NameIdentifier));

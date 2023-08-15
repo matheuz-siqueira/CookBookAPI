@@ -73,11 +73,11 @@ public class RecipeController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public ActionResult<RecipeResponse> GetRecipe([FromRoute] int id)
+    public async Task<ActionResult<RecipeResponse>> GetRecipe(int id)
     {
         try
         {
-            return Ok(_service.GetById(id, User));
+            return Ok(await _service.GetById(id, User));
         }
         catch (RecipeNotFound e)
         {
@@ -102,11 +102,11 @@ public class RecipeController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public ActionResult<RecipeResponse> PutRecipe([FromRoute] int id, [FromBody] CreateUpdateRecipeReq edited)
+    public async Task<ActionResult<RecipeResponse>> PutRecipe([FromRoute] int id, [FromBody] CreateUpdateRecipeReq edited)
     {
         try
         {
-            return Ok(_service.Update(edited, id, User));
+            return Ok(await _service.Update(edited, id, User));
         }
         catch (RecipeNotFound e)
         {
@@ -127,11 +127,11 @@ public class RecipeController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public ActionResult DeleteRecipe([FromRoute] int id)
+    public async Task<ActionResult> DeleteRecipe([FromRoute] int id)
     {
         try
         {
-            _service.Revove(id, User);
+            await _service.Revove(id, User);
             return NoContent();
         }
         catch (RecipeNotFound e)

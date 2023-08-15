@@ -35,13 +35,17 @@ public class RecipeRepository
         .Where(r => userIds.Contains(r.UserId)).ToListAsync();
     }
 
-    public Recipe GetById(int recipeId, int userId, bool tracking = false)
+    public async Task<Recipe> GetById(int recipeId)
     {
-        return tracking
-            ? _context.Recipe.Where(r => r.UserId == userId)
-                .Include(r => r.Ingredients).FirstOrDefault(r => r.Id == recipeId)
-            : _context.Recipe.AsNoTracking().Where(r => r.UserId == userId)
-                .Include(r => r.Ingredients).FirstOrDefault(r => r.Id == recipeId);
+        return await _context.Recipe.AsNoTracking()
+                .Include(r => r.Ingredients)
+                .FirstOrDefaultAsync(r => r.Id == recipeId);
+    }
+
+    public async Task<Recipe> GetByIdTracking(int recipeId, int userId)
+    {
+        return await _context.Recipe.Include(r => r.Ingredients)
+            .Where(r => r.UserId == userId).FirstOrDefaultAsync(r => r.Id == recipeId);
     }
 
     public async Task<int> RecipeCountAsync(int userId)
