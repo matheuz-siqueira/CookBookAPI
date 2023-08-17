@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using cookbook_api.WebSockets;
 using Microsoft.AspNetCore.Authorization;
 using HashidsNet;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -131,8 +133,19 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddSignalR();
+builder.Services.AddHealthChecks().AddDbContextCheck<Context>();
 
 var app = builder.Build();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    AllowCachingResponses = false,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+    }
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
