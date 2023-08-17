@@ -31,4 +31,14 @@ public class ConnectionRepository
         .Select(c => c.ConnectedWithUserId)
         .ToListAsync();
     }
+    public async Task RemoveConnectionAsync(int loggedUserId, int idToRemove)
+    {
+        var connections = await _context.Connections
+            .Where(c => (c.UserId == loggedUserId && c.ConnectedWithUserId == idToRemove)
+            || (c.ConnectedWithUserId == loggedUserId && c.UserId == idToRemove))
+            .ToListAsync();
+
+        _context.Connections.RemoveRange(connections);
+        await _context.SaveChangesAsync();
+    }
 }
