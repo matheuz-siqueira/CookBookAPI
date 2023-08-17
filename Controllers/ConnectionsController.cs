@@ -19,7 +19,13 @@ public class ConnectionsController : ControllerBase
         _service = service;
     }
 
-    [HttpGet]
+    /// <summary>
+    /// Obter todas as conexões de um usuário
+    /// </summary>
+    /// <returns>Lista de conexões</returns>
+    /// <response code="200">Sucesso</response>
+    /// <response code="204">Sucesso</response>
+    [HttpGet("get-connections")]
     public async Task<ActionResult<List<UserConnectedResponse>>> GetConnections()
     {
         var result = await _service.GetConnection();
@@ -30,8 +36,14 @@ public class ConnectionsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete]
-    [Route("delete/{id:int}")]
+    /// <summary>
+    /// Remover uma conexão
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Nada</returns>
+    /// <response code="204">Sucesso</response> 
+    /// <response code="404">Não encontrado</response>
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteConnection([FromRoute] int id)
     {
         try
