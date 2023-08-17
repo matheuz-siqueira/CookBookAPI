@@ -1,4 +1,5 @@
 using cookbook_api.Dtos.User;
+using cookbook_api.Exceptions;
 using cookbook_api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,21 @@ public class ConnectionsController : ControllerBase
             return Ok(result);
         }
         return NoContent();
+    }
+
+    [HttpDelete]
+    [Route("delete/{id:int}")]
+    public async Task<ActionResult> DeleteConnection([FromRoute] int id)
+    {
+        try
+        {
+            await _service.DeleteConnection(id);
+            return NoContent();
+        }
+        catch (UserException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
 
     }
 

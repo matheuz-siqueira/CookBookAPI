@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using cookbook_api.Dtos.User;
+using cookbook_api.Exceptions;
 using cookbook_api.Repositories;
 using Mapster;
 
@@ -47,5 +48,20 @@ public class ConnectionsService
             return item;
         });
         return await Task.WhenAll(tasks);
+    }
+    public async Task DeleteConnection(int idToRemove)
+    {
+        var userId = int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var connections = await _connectionRepository.GetConnectionsAsync(userId);
+        Validate(connections, idToRemove);
+        await _connectionRepository.RemoveConnectionAsync(userId, idToRemove);
+    }
+
+    private static void Validate(List<int> connections, int idToRemove)
+    {
+        if (!connections.Contains(idToRemove))
+        {
+            throw new RecipeNotFound("Recipe not found");
+        }
     }
 }
