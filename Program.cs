@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using HashidsNet;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using cookbook_api.Converter;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -84,7 +85,10 @@ builder.Services.AddVersionedApiExplorer(c =>
     c.SubstituteApiVersionInUrl = true;
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(option =>
+{
+    option.JsonSerializerOptions.Converters.Add(new TrimStringConverter());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 builder.Services.AddEndpointsApiExplorer();
