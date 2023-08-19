@@ -4,6 +4,9 @@ using cookbook_api.Exceptions;
 using cookbook_api.Models;
 using cookbook_api.Repositories;
 using HashidsNet;
+using SkiaSharp;
+using SkiaSharp.QrCode;
+using SkiaSharp.QrCode.Image;
 
 namespace cookbook_api.Services;
 
@@ -14,6 +17,9 @@ public class QRCodeService
     private readonly UserRepository _userRepository;
     private readonly ConnectionRepository _connectionRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public static object SKEncodedImageFormat { get; private set; }
+
     public QRCodeService(CodeRepository codeRepository,
         IHttpContextAccessor httpContextAccessor,
         UserRepository userRepository,
@@ -27,7 +33,7 @@ public class QRCodeService
         _hashids = hashids;
     }
 
-    public async Task<(string qrCode, string userId)> GenerateQRCode()
+    public async Task<(byte[] qrCode, string userId)> GenerateQRCode()
     {
         var userId = int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
         var code = new Codes
@@ -36,7 +42,7 @@ public class QRCodeService
             UserId = userId,
         };
         await _codeRepository.RegisterAsync(code);
-        return (code.Code, _hashids.Encode(userId));
+        return (GenerateImageQRCode(code.Code), _hashids.Encode(userId));
     }
 
     public async Task<(UserConnectionResponse requester, string idCreator)>
@@ -104,5 +110,26 @@ public class QRCodeService
         }
     }
 
+    private static byte[] GenerateImageQRCode(string code)
+    {
+        using var generator = new QRCodeGenerator();
 
+        var level = ECCLevel.Q;
+        var qr = generator.CreateQrCode(code, level);
+
+        var info = new SKImageInfo(150, 150);
+        using var surface = SKSurface.Create(info);
+
+        var canvas = surface.Canvas;
+        canvas.Render(qr, 150, 150);
+
+        using var image = surface.Snapshot();
+        using var data = image.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100);
+
+        using var stream = new MemoryStream();
+        data.SaveTo(stream);
+
+        return stream.ToArray();
+
+    }
 }
