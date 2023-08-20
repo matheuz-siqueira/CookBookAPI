@@ -26,7 +26,7 @@
 
 Este é um projeto de uma API ASP NET desenvolvida utilizando .NET CORE 7 e uma abordagem de desenvolvimento em camadas.
 
-Esse projeto foi desenvolvido com o intuito de consolidar conceitos essencias do desenvolvimento de aplicações ASP NET CORE utilizando .NET, tendo por base um curso como guia mas adotando estratégias de implementação diferentes.
+Esse projeto foi desenvolvido com o intuito de consolidar conceitos essenciais do desenvolvimento de aplicações ASP NET CORE utilizando .NET, tendo por base um curso como guia mas adotando estratégias de implementação diferentes.
 
 Essa API busca permitir que usuários consigam registrar suas receitas favoritas e também compartilhar com outras pessoas.
 
